@@ -56,5 +56,5 @@ Pero para resumir fue muy simple.
 </div>
 
 # NOTA
-- Aun no encuentro la forma de automatizar el codigo para que se realice automaticamente, quizá es momento para tomar un curso 😃 
+- Aun no encuentro la forma de automatizar el codigo para que se realice automaticamente, quizá es momento de seguir buscando 😃 
 - Con estos cambios puedes codificar tranquilamente tu aplicación, **PERO** recuerda que debes modificar la variable `cacheUrls` dependiendo que archivos necesites ponerlos en cache
