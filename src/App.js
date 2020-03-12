@@ -7,14 +7,15 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>¡Mi App esta lista!</p>
+        <p>¡Esta App esta realizada en React!</p>
+        <p>Y si es una Progressive Web App</p>
         <a
           className="App-link"
-          href="https://reactjs.org"
+          href="https://blog.logrocket.com/creating-a-lists-pwa-with-react-and-firebase/"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Link del tutorial
         </a>
       </header>
     </div>

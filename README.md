@@ -1,68 +1,60 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Desarrollo de una PWA con React 
+Este proyecto se realiza por diversión para probar la funcionalidad de PWA y cache con React.
+Visita el sitio [aquí](https://wpa-react-68110.web.app/ 'Ir a firebase')
 
-## Available Scripts
+## La travesia de para encontrar información 
+La verdad no fue díficil pero si tomó tiempo leer documentación, un par de post y videos en YT.
 
-In the project directory, you can run:
+Pero para resumir fue muy simple.
+1) Realizar el build del proyecto (`yarn run build`)
+2) Esto generará un `index.html` y `service-worker.js` dentro de `build/` 
+3) Copiar y pegar el siguiente código debajo de todas tus etiquetas `<scrip/>` en el archivo `index.html`
+   
+      `<script>
+            if ("serviceWorker" in navigator) {
+              window.addEventListener("load", () => {
+                navigator.serviceWorker.register("serviceWorker.js");
+              });
+            }
+      </script>`
 
-### `yarn start`
+4) Copiar y pegar el siguiente código al final del archivo `service-worker.js`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+          `const cacheUrls = [
+            "/",
+            "/build/static/css/*.css",
+            "/build/static/css/**/*.css",
+            "/build/static/js/*.js",
+            "/build/static/js/**/*.js",
+            "/build/media/**/*.jpg",
+            "/build/media/*.jpg"
+          ];`
+          `const version = "v1/";
+          self.addEventListener("install", event => {`
+            `self.skipWaiting();
+            event.waitUntil(
+              caches
+                .open(version)
+                .then(cache => cache.addAll(cacheUrls))
+                .then(() => console.log("assets cached"))
+            );
+          });`
+          `self.addEventListener("fetch", event => {
+            if (event.request.method === "GET") {
+              event.respondWith(
+                fetch(event.request).catch(() => {
+                  return caches.match(event.request);
+                })
+              );
+            }
+          });
+          `
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+# Screenshots
+<div align="center">
+  <img src="./Screenshots/shot1.png" width="800%" style="align: center">
+</div>
 
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+# NOTA
+- Aun no encuentro la forma de automatizar el codigo para que se realice automaticamente, quizá es momento para tomar un curso 😃 
+- Con estos cambios puedes codificar tranquilamente tu aplicación, **PERO** recuerda que debes modificar la variable `cacheUrls` dependiendo que archivos necesites ponerlos en cache

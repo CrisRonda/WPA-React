@@ -1,0 +1,41 @@
+/*HTML produc SCRIPT*/
+<script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("serviceWorker.js");
+        });
+      }
+</script>
+
+
+
+/*Test caching ServiceWorker produc */
+const cacheUrls = [
+  "/",
+  "/build/static/css/*.css",
+  "/build/static/css/**/*.css",
+  "/build/static/js/*.js",
+  "/build/static/js/**/*.js",
+  "/build/media/**/*.jpg",
+  "/build/media/*.jpg"
+];
+const version = "v1/";
+self.addEventListener("install", event => {
+  self.skipWaiting();
+
+  event.waitUntil(
+    caches
+      .open(version)
+      .then(cache => cache.addAll(cacheUrls))
+      .then(() => console.log("assets cached"))
+  );
+});
+self.addEventListener("fetch", event => {
+  if (event.request.method === "GET") {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match(event.request);
+      })
+    );
+  }
+});
