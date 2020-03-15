@@ -5,7 +5,7 @@ import "../App.css";
 function LandingPage() {
   return (
     <Container>
-      <Header title="What Pokemon are you looking for?">
+      <Header border={true} title="What Pokemon are you looking for?">
         <div className="container-input">
           <input
             type="text"
