@@ -1,6 +1,7 @@
 html {
   box-sizing: border-box;
   background-color: #e5e5e5;
+  height: 100%;
 }
 
 *, *:after, *:before {
@@ -35,11 +36,13 @@ body {
 
 .App-title {
   color: var(--primary_text);
+  user-select: none;
   position: absolute;
+  display: flex;
   align-self: center;
   justify-content: center;
   top: 35px;
-  left: 56px;
+  /* left: 56px; */
   margin: 0 auto;
 }
 
@@ -64,6 +67,7 @@ body {
 }
 
 .container-button {
+  user-select: none;
   position: relative;
   min-width: 156px;
   display: flex;
@@ -72,6 +76,18 @@ body {
   border-radius: 15px;
   margin: 1rem;
   overflow: hidden;
+  opacity: 0.7;
+  transition: opacity .5s ease-in-out, transform .3s ease-in-out;
+}
+
+.container-button:hover {
+  filter: contrast(1.2);
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.container-button:active {
+  transform: scale(0.9);
 }
 
 .bt-rg-pk {
@@ -175,6 +191,17 @@ body {
   top: 32px;
   left: 8px;
   font-size: 48px;
+  transform: rotate(180deg);
+  transition: all .3s ease-in;
+}
+
+.icon:hover {
+  transform: rotate(360deg);
+  transform: scale(1.5);
+}
+
+.icon:active {
+  transform: scale(.7);
 }
 
 .icon-menu {
@@ -182,19 +209,26 @@ body {
   top: 44px;
   right: 14px;
   font-size: 48px;
+  transition: all .3s cubic-bezier(0.6, 0.04, 0.98, 0.335);
+  z-index: 99;
+}
+
+.icon-menu:hover {
+  transform: scale(1.2);
 }
 
 .pokemon-cards-container {
   display: flex;
   flex: 1;
+  height: 100%;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
 }
 
 .pokemon-card-container {
-  background-color: #48D0B0;
   width: 175px;
+  height: 110px;
   border-radius: 20px;
   position: relative;
   color: white;
@@ -203,6 +237,11 @@ body {
   padding: .5rem;
   overflow: hidden;
   margin: 10px 10px;
+  transition: transform .2s ease-out;
+}
+
+.pokemon-card-container:hover {
+  transform: scale(1.1);
 }
 
 .pokemon-cart-container-types {
@@ -212,12 +251,17 @@ body {
 }
 
 .pokemon-card-type {
-  background-color: #46D0A7;
-  border: rgba(0, 0, 0, 0.1) solid 1px;
+  user-select: none;
+  border: rgba(0, 0, 0, 0.1) solid 1.5px;
   box-shadow: -4px 14px 13px -10px rgba(0, 0, 0, 0.75);
   width: 70px;
   margin: 4px 0;
   border-radius: 50px;
+  transition: transform .1s ease-in-out;
+}
+
+.pokemon-card-type:hover {
+  transform: scale(1.3);
 }
 
 .pokemon-card-type p {
@@ -250,6 +294,8 @@ body {
 
 .details-img {
   position: relative;
+  width: 15%;
+  min-width: 250px;
   z-index: 20;
 }
 
@@ -290,8 +336,11 @@ body {
 
 @media screen and (min-width:768px) {
   .App-title {
-    top: 20px;
-    left: 3rem;
+    position: absolute;
+    top: 28px;
+    left: 4rem;
+    font-size: 48px;
+    /* left: 3rem; */
   }
   .container-buttons {
     margin: 2rem;

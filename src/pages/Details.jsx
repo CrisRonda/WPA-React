@@ -1,24 +1,42 @@
 import React from "react";
 import { Container, Header, CardPokemonType } from "../components";
-import pokemon from "../assets/Images/pokemon.png";
+import { useHistory } from "react-router-dom";
 import "../App.css";
 
-function PokedexPage() {
+function Details(props) {
+  const pokemon = props.location.state.pokemon;
+  const bgColor = props.location.state.bgColor;
+  const { name, types, sprites, order } = pokemon;
+  let history = useHistory();
+  function onClickGoBack() {
+    history.goBack();
+  }
   document
     .querySelector('meta[name="theme-color"]')
-    .setAttribute("content", "#48D0B0");
+    .setAttribute("content", bgColor);
   return (
     <Container>
-      <Header title="Bulbasaur" back={true} isWhite={true} bgColor="#48D0B0">
+      <Header
+        onClickGoBack={onClickGoBack}
+        title={name}
+        back={true}
+        isWhite={true}
+        bgColor={bgColor}
+      >
         <div className="micro-details">
-          <CardPokemonType title="Poison" />
-          <CardPokemonType title="Grass" />
-          <span>Seed Pokemon</span>
-          <span>#001</span>
+          {types.map(item => (
+            <CardPokemonType title={item.type.name} />
+          ))}
+          {/* <span>{name} Pokemon</span> */}
+          <span>#{order}</span>
         </div>
-        <img className="details-img" src={pokemon} alt="pokemon" />
+        <img
+          className="details-img"
+          src={sprites.front_default}
+          alt="pokemon"
+        />
         <div className="pokemon-details">
-          <h2>Bulbasaur</h2>
+          <h2>{name}</h2>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices
             nibh nec faucibus semper. In pretium est turpis, semper tempor eros
@@ -81,4 +99,4 @@ function PokedexPage() {
   );
 }
 
-export default PokedexPage;
+export default Details;

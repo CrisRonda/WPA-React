@@ -4,6 +4,7 @@ import { IoIosMenu, IoIosArrowBack } from "react-icons/io";
 import "../App.css";
 
 export default props => {
+  const { onClickGoBack } = props;
   return (
     <div>
       <div
@@ -14,20 +15,28 @@ export default props => {
         }}
       >
         <header className="App-header">
-          {props.back ? (
-            <IoIosArrowBack
-              color={props.isWhite ? "white" : "black"}
-              className="icon"
-            />
-          ) : (
-            <></>
-          )}
-          <h1
-            className="App-title"
-            style={{ color: props.isWhite ? "white" : "black" }}
+          <div
+            onClick={onClickGoBack}
+            style={{ height: props.isback ? "100%" : "inherit" }}
           >
-            {props.title}
-          </h1>
+            {props.back ? (
+              <IoIosArrowBack
+                color={props.isWhite ? "white" : "black"}
+                className="icon"
+              />
+            ) : (
+              <></>
+            )}
+            <h1
+              className="App-title"
+              style={{
+                color: props.isWhite ? "white" : "black",
+                left: props.back ? "56px" : "0"
+              }}
+            >
+              {props.title}
+            </h1>
+          </div>
           {props.back ? (
             <IoIosMenu
               color={props.isWhite ? "white" : "black"}
