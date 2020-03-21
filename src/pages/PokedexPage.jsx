@@ -1,32 +1,38 @@
+/* eslint-disable no-use-before-define */
 import React from "react";
 import { Container, Header, CardPokemon } from "../components";
 import "../App.css";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchPokemons } from "../Redux/Actions/index";
+import { getPokemonsInGenerations } from "../services/PokeApi";
+import { setDataPokemon } from "../Redux/Actions/index";
 
 const PokedexPage = props => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = React.useState([]);
-  const pokemons = useSelector(state => state.PokemonReducer.pokemonsInfo);
+  const pokemons = useSelector(state => state.PokemonReducer.pokemons);
 
   React.useEffect(() => {
-    if (loading.length === 0) {
-      dispatch(fetchPokemons());
-      setLoading([{}, {}]);
-    }
-  }, [dispatch, loading.length]);
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   let history = useHistory();
   function onClickGoBack() {
     history.goBack();
   }
+  const loadData = async () => {
+    const getPokemons = await getPokemonsInGenerations();
+    dispatch(setDataPokemon(getPokemons));
+  };
+  document
+    .querySelector('meta[name="theme-color"]')
+    .setAttribute("content", "#fff");
   return (
     <Container bgColor="white">
       <Header title="Pokedex" back={true} onClickGoBack={onClickGoBack}>
         <div className="pokemon-cards-container">
-          {pokemons.sort().map(item => (
+          {pokemons.map(item => (
             <CardPokemon {...item} />
-          ))}
+          ))}{" "}
         </div>
       </Header>
     </Container>

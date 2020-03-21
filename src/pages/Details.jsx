@@ -2,100 +2,209 @@ import React from "react";
 import { Container, Header, CardPokemonType } from "../components";
 import { useHistory } from "react-router-dom";
 import "../App.css";
+import { Tabs, useTabState, usePanelState } from "@bumaga/tabs";
+
+const URL_IMAGE = "https://pokeres.bastionbot.org/images/pokemon/";
 
 function Details(props) {
   const pokemon = props.location.state.pokemon;
   const bgColor = props.location.state.bgColor;
-  const { name, types, sprites, order } = pokemon;
+
+  document
+    .querySelector('meta[name="theme-color"]')
+    .setAttribute("content", bgColor);
+  document.title = "Pokemon Details";
+
+  const {
+    name,
+    types,
+    id,
+    moves,
+    height,
+    weight,
+    abilities,
+    sprites,
+    stats
+  } = pokemon;
   let history = useHistory();
   function onClickGoBack() {
     history.goBack();
   }
-  document
-    .querySelector('meta[name="theme-color"]')
-    .setAttribute("content", bgColor);
-  return (
-    <Container>
-      <Header
-        onClickGoBack={onClickGoBack}
-        title={name}
-        back={true}
-        isWhite={true}
-        bgColor={bgColor}
+  function setNumberID(id) {
+    const lenght = id.toString().length;
+    if (lenght === 1) return `#00${id}`;
+    if (lenght === 2) return `#0${id}`;
+    return `#${id}`;
+  }
+  const Tab = props => {
+    const { onClick, isActive } = useTabState();
+    return (
+      <button
+        onClick={onClick}
+        className={`button-tab ${isActive ? "button-tab-active" : ""}`}
       >
-        <div className="micro-details">
-          {types.map(item => (
-            <CardPokemonType title={item.type.name} />
-          ))}
-          {/* <span>{name} Pokemon</span> */}
-          <span>#{order}</span>
+        {props.children}
+      </button>
+    );
+  };
+
+  const Panel = props => {
+    const isActive = usePanelState();
+    return isActive ? <>{props.children}</> : null;
+  };
+  const itemInfo = (name, color) => {
+    return (
+      <div className="container-moves-move" style={{ backgroundColor: color }}>
+        <p> {name}</p>
+      </div>
+    );
+  };
+  const rateStat = (name, base) => {
+    let rate = 1;
+    switch (name) {
+      case "speed":
+        const speed = 317;
+        rate = base / speed;
+        return { max: speed, rate };
+      case "special-defense":
+        const spDef = 284;
+        rate = base / spDef;
+        return { max: spDef, rate };
+      case "special-attack":
+        const spAtk = 350;
+        rate = base / spAtk;
+        return { max: spAtk, rate };
+      case "defense":
+        const defense = 218;
+        rate = base / defense;
+        return { max: defense, rate };
+      case "attack":
+        const attack = 306;
+        rate = base / attack;
+        return { max: attack, rate };
+      case "hp":
+        const hp = 354;
+        rate = base / hp;
+        return { max: hp, rate };
+      default:
+        return { base, rate };
+    }
+  };
+  const renderStats = statElement => {
+    const { base_stat, stat } = statElement;
+    const getRate = rateStat(stat.name, base_stat);
+    const rate = 100 * getRate.rate;
+    const maxValue = getRate.max;
+
+    return (
+      <>
+        <div className="stat-info">
+          <h3>{stat.name}</h3>
+          <span>{base_stat}</span>
+          <div className="stat-bar">
+            <div
+              style={{ width: `${rate}%`, backgroundColor: "#4BC07A" }}
+              className="stat-bar-level"
+            />
+            <p>Max: {maxValue}</p>
+          </div>
         </div>
-        <img
-          className="details-img"
-          src={sprites.front_default}
-          alt="pokemon"
-        />
-        <div className="pokemon-details">
-          <h2>{name}</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices
-            nibh nec faucibus semper. In pretium est turpis, semper tempor eros
-            gravida sed. Nam vel nulla quis ipsum accumsan luctus. Quisque
-            aliquam congue enim et iaculis. Integer sagittis ex in convallis
-            consequat. Duis sodales, massa ac vestibulum commodo, justo augue
-            mattis lacus, eu sagittis sapien mauris et tellus. Vestibulum lorem
-            nisi, scelerisque a orci id, condimentum imperdiet lectus. Mauris
-            mattis aliquam diam, at ornare enim feugiat id. Ut maximus tincidunt
-            justo, in hendrerit orci interdum vel. Nunc sit amet elit id leo
-            pellentesque tempus in iaculis dui. Aliquam cursus ligula neque, et
-            sollicitudin dolor fermentum ut. Aliquam ornare tellus id mi
-            tincidunt interdum. In malesuada mi id maximus tempus. Etiam
-            vulputate nisl ac justo ultrices, a pretium mauris rutrum.
-            Vestibulum dictum quis ante vitae fermentum. Integer posuere
-            molestie quam nec rutrum. Curabitur nec felis bibendum, aliquam ex
-            nec, convallis erat. Proin id ex ut est lobortis viverra. Phasellus
-            eros libero, laoreet vitae blandit sit amet, molestie at lectus.
-            Donec pulvinar iaculis nisl. Nunc auctor mollis nulla, non finibus
-            dolor hendrerit sit amet. Nunc cursus turpis eget elit finibus, nec
-            vulputate ipsum venenatis. Quisque ultrices gravida nulla sed
-            sagittis. Aenean enim neque, efficitur volutpat nulla in,
-            sollicitudin dapibus urna. Curabitur nunc neque, tristique tempor
-            dictum at, semper suscipit nisi. Donec lobortis, lacus eu convallis
-            fringilla, libero lacus pharetra neque, sed suscipit metus ipsum in
-            leo. Etiam tempus, nisi ac volutpat molestie, erat nulla fermentum
-            libero, quis ultrices mauris tortor nec risus. Vivamus mi eros,
-            porta vitae scelerisque non, dapibus ut nibh. Integer dictum, ex id
-            pretium accumsan, turpis ipsum congue eros, auctor euismod metus
-            sapien eget metus. Mauris auctor, neque vitae ullamcorper auctor,
-            magna tortor dapibus quam, sed blandit libero lectus sed lectus.
-            Maecenas nulla sem, pretium sed placerat eu, placerat in tellus.
-            Curabitur dapibus tincidunt justo, blandit interdum libero aliquam
-            at. Donec non feugiat eros, eleifend pharetra felis. Donec cursus,
-            turpis ac porttitor molestie, enim libero interdum ipsum, et
-            vestibulum erat turpis ut purus. Quisque egestas dui sit amet ex
-            tempor mollis. Nam bibendum neque eu tincidunt aliquam. Pellentesque
-            aliquet ipsum vel neque mattis lacinia. Maecenas urna nulla, cursus
-            sed blandit quis, feugiat ac lectus. Praesent ut diam gravida,
-            egestas diam ut, tempor leo. Cras ac tortor id metus rutrum
-            pellentesque. Mauris eget magna ac odio vulputate tincidunt. Morbi
-            ligula lectus, lacinia non urna eget, cursus pellentesque nulla.
-            Integer ac pulvinar elit, non pretium metus. Duis fermentum et metus
-            in porttitor. Nunc in felis egestas, commodo risus nec, maximus
-            felis. Donec aliquam commodo diam, ac tincidunt leo. Vestibulum et
-            consequat lacus, eu porta est. Suspendisse vestibulum tortor lorem,
-            eu dignissim urna ullamcorper a. In at ornare diam, ut pretium
-            velit. Aliquam ut consectetur mauris, vitae sodales nisl. Aenean
-            sagittis, velit in venenatis tincidunt, ante felis sollicitudin
-            nulla, at elementum massa lectus et justo. Integer vitae nunc et
-            libero auctor consequat. Praesent molestie dolor in neque auctor, at
-            porttitor dolor pellentesque. Pellentesque purus arcu, malesuada sit
-            amet mi sed, ornare dapibus purus. Integer sed condimentum ante, eu
-            iaculis dui. Praesent cursus pharetra ex id luctus. Nullam at lacus
-            lectus.
-          </p>
-        </div>
-      </Header>
-    </Container>
+      </>
+    );
+  };
+  return (
+    <>
+      <Container>
+        <Header
+          onClickGoBack={onClickGoBack}
+          title={name}
+          back={true}
+          love={true}
+          isWhite={true}
+          bgColor={bgColor}
+        >
+          <div className="micro-details">
+            {types.map(item => (
+              <CardPokemonType title={item.type.name} />
+            ))}
+            <span>{setNumberID(id)}</span>
+          </div>
+          <img
+            className="details-img"
+            src={`${URL_IMAGE}${id}.png`}
+            alt="pokemon"
+          />
+          <div className="pokemon-details">
+            <div>
+              <Tabs>
+                <div className="header-tab">
+                  <Tab>About</Tab>
+                  <Tab>Base stats</Tab>
+                  <Tab>Moves</Tab>
+                </div>
+
+                <Panel>
+                  <div className="container-about">
+                    <h2>{name}</h2>
+                    <div className="section-about">
+                      <h3>abilities</h3>
+                      <div className="container-moves">
+                        {abilities.map(abilitieItem =>
+                          itemInfo(abilitieItem.ability.name, bgColor)
+                        )}
+                      </div>
+                    </div>
+                    <div className="section-about">
+                      <h3>More info</h3>
+                    </div>
+                    <div className="container-height-weight">
+                      <div className="detail-height-weight">
+                        <span>Height</span>
+                        <p>{height} cm</p>
+                      </div>
+                      <div className="detail-height-weight">
+                        <span>Weight</span>
+                        <p>{weight} ksg</p>
+                      </div>
+                    </div>
+                  </div>
+                </Panel>
+                <Panel>
+                  <div className="container-about">
+                    <h2>Stats</h2>
+                    <div className="section-about">
+                      <h3>Sprites</h3>
+                    </div>
+                    <div className="container-height-weight">
+                      {Object.values(sprites).map(
+                        sprite => sprite && <img src={sprite} alt="pole" />
+                      )}
+                    </div>
+
+                    <div className="section-about">
+                      <h3>Stats</h3>
+                    </div>
+                    <div className="constainer-stats">
+                      {stats.map(stant => renderStats(stant))}
+                    </div>
+                  </div>
+                </Panel>
+                <Panel>
+                  <div className="container-about">
+                    <h2>All moves</h2>
+                  </div>
+                  <div className="container-moves">
+                    {moves.map(moveItem =>
+                      itemInfo(moveItem.move.name, bgColor)
+                    )}
+                  </div>
+                </Panel>
+              </Tabs>
+            </div>
+          </div>
+        </Header>
+      </Container>
+    </>
   );
 }
 

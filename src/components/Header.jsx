@@ -1,10 +1,38 @@
 import React from "react";
 import logo from "../assets/Images/pokeball.png";
-import { IoIosMenu, IoIosArrowBack } from "react-icons/io";
+import { IoIosMenu, IoIosArrowBack, IoIosHeartEmpty } from "react-icons/io";
 import "../App.css";
 
 export default props => {
   const { onClickGoBack } = props;
+  const arrowBack = props => {
+    return (
+      <IoIosArrowBack
+        color={props.isWhite ? "white" : "black"}
+        className="icon"
+      />
+    );
+  };
+  const loveHeart = props => {
+    return (
+      <IoIosHeartEmpty
+        color={props.isWhite ? "white" : "black"}
+        className="icon-menu"
+      />
+    );
+  };
+  const menuIcon = props => {
+    return (
+      <IoIosMenu
+        color={props.isWhite ? "white" : "black"}
+        className="icon-menu"
+      />
+    );
+  };
+  function setIcon(props, love) {
+    if (love) return loveHeart(props);
+    else return menuIcon(props);
+  }
   return (
     <div>
       <div
@@ -19,14 +47,7 @@ export default props => {
             onClick={onClickGoBack}
             style={{ height: props.isback ? "100%" : "inherit" }}
           >
-            {props.back ? (
-              <IoIosArrowBack
-                color={props.isWhite ? "white" : "black"}
-                className="icon"
-              />
-            ) : (
-              <></>
-            )}
+            {props.back && arrowBack(props)}
             <h1
               className="App-title"
               style={{
@@ -37,14 +58,7 @@ export default props => {
               {props.title}
             </h1>
           </div>
-          {props.back ? (
-            <IoIosMenu
-              color={props.isWhite ? "white" : "black"}
-              className="icon-menu"
-            />
-          ) : (
-            <></>
-          )}
+          {props.back && setIcon(props, props.love)}
           <div className="App-logo">
             <img src={logo} alt="logo" />
           </div>

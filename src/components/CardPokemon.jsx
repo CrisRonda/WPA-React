@@ -79,7 +79,7 @@ export default props => {
         break;
 
       default:
-        color = "#a3a3a3";
+        // color = "#a3a3a3";
         break;
     }
     return color;
